@@ -32,7 +32,7 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 if [[ -z $OUTDIR ]] || [[ -z $STARTDATE ]] || [[ -z $ENDDATE ]]
 then
 	echo "Missing argument"
-	echo "Example: ./rancher-logs-by-date.sh --output /tmp/rancher_logs --start 2019-03-21 --end 2019-03-22
+	echo "Example: ./rancher-logs-by-date.sh --output /tmp/rancher_logs --start 2019-03-21 --end 2019-03-22"
 	exit 1
 fi
 

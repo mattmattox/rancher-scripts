@@ -58,3 +58,5 @@ do
 	rm -rf $dir
 done
 
+echo "Restarting docker service..."
+service docker restart

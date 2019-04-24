@@ -33,7 +33,7 @@ then
         for volume in $(docker volume ls -q)
         do
                 echo "volumes: $volume"
-                docker volume rm volume
+                docker volume rm $volume
         done
 else
         echo "No docker volumes found"

@@ -9,6 +9,11 @@ echo "You are able to destroy all docker and kubernetes data stored on this serv
 read -p "Are you sure? Y/N" -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
+	echo "Starting..."
+else
+	echo "Exiting..."
+	exit 1
+fi
 
 echo "Removing all containers..."
 if [[ ! -z "$(docker ps -qa)" ]]
@@ -38,7 +43,7 @@ echo "Stopping docker service..."
 systemctl stop docker
 
 echo "Killing all docker processes.."
-if [[ ! -z "$(ps aux | grep docker | awk '{print $2}')"]]
+if [[ ! -z "$(ps aux | grep docker | awk '{print $2}')" ]]
 then
 	kill -9 $(ps aux | grep docker | awk '{print $2}')
 else
@@ -52,4 +57,4 @@ do
 	echo "Removing $dir"
 	rm -rf $dir
 done
-kk
+

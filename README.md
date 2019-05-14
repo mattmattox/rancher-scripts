@@ -2,8 +2,8 @@
 **Node Clean Up**
 This script to remove all containters, images, and Kubernetes.
 
-`wget https://raw.githubusercontent.com/mattmattox/rancher-scripts/master/clean-node.sh`
-`chmod +x clean-node.sh`
+`wget https://raw.githubusercontent.com/mattmattox/rancher-scripts/master/clean-node.sh`\
+`chmod +x clean-node.sh`\
 `./clean-node.sh`
 
 **Collect HAProxy config and logs**

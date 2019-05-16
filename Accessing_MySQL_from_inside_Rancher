@@ -1,0 +1,5 @@
+# Accessing MySQL from inside Rancher Server in v1.6
+You can use this command to access MySQL when troubleshooting Rancher issues.
+
+`docker exec -it <<Rancher Server ID>> bash`
+`mysql -u ${CATTLE_DB_CATTLE_USERNAME} -h ${CATTLE_DB_CATTLE_MYSQL_HOST} -p${CATTLE_DB_CATTLE_PASSWORD} ${CATTLE_DB_CATTLE_MYSQL_NAME}`

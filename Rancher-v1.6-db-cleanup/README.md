@@ -1,11 +1,15 @@
 # Rancher database cleanup script
+
 This script will cleanup a number of purged items from Rancher's database.
 
 **Prep Work**
+
 This script can put a heavy load on the database server, so this script should be done off hours and/or during a maintenance window.
+
 Also, we would recommend not doing any large deployments during this work.
 
 **Running the script for External database**
+
 Please take a database backup using this command.
 
 `mysqldump -h <<db-host>> -u <<db-user>> -p <<db-name>> | gzip > ./RancherDBBackup_PreCleanup.sql`
@@ -20,6 +24,7 @@ Please take a database backup using this command. (Optional)
 
 
 **Running the script for single node using internal database**
+
 Grab the containter ID for the Rancher server.
 
 `docker ps | grep rancher`

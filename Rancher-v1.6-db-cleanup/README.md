@@ -12,7 +12,7 @@ Also, we would recommend not doing any large deployments during this work.
 
 Please take a database backup using this command.
 
-`mysqldump -h <<db-host>> -u <<db-user>> -p <<db-name>> | gzip > ./RancherDBBackup_PreCleanup.sql`
+`mysqldump -h <<db-host>> -u <<db-user>> -p --add-drop-database <<db-name>> | gzip > ./RancherDBBackup_PreCleanup.sql`
 
 Please run the following SQL commands.
 
@@ -20,7 +20,7 @@ Please run the following SQL commands.
 
 Please take a database backup using this command. (Optional)
 
-`mysqldump -h <<db-host>> -u <<db-user>> -p <<db-name>> | gzip > ./RancherDBBackup_PostCleanup.sql`
+`mysqldump -h <<db-host>> -u <<db-user>> -p --add-drop-database <<db-name>> | gzip > ./RancherDBBackup_PostCleanup.sql`
 
 
 **Running the script for single node using internal database**
@@ -31,7 +31,7 @@ Grab the containter ID for the Rancher server.
 
 Please take a database backup using this command.
 
-`docker exec <<Containter ID>> /usr/bin/mysqldump | gzip > ./RancherDBBackup_PreCleanup.sql`
+`docker exec <<Containter ID>> /usr/bin/mysqldump --add-drop-database | gzip > ./RancherDBBackup_PreCleanup.sql`
 
 Please run the following SQL commands.
 
@@ -39,5 +39,5 @@ Please run the following SQL commands.
 
 Please take a database backup using this command. (Optional)
 
-`docker exec <<Containter ID>> /usr/bin/mysqldump | gzip > ./RancherDBBackup_PostCleanup.sql`
+`docker exec <<Containter ID>> /usr/bin/mysqldump --add-drop-database | gzip > ./RancherDBBackup_PostCleanup.sql`
 

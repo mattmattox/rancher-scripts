@@ -6,7 +6,6 @@ delete from instance_label_map where instance_id in (select id from purged_insta
 delete from ip_address_nic_map where state = 'purged';
 delete from ip_address_nic_map where nic_id in (select id from nic where instance_id in (select id from purged_instance_ids));
 delete from nic where state = 'purged';
-delete from nic where instance_id in (select id from purged_instance_ids);
 delete from mount where state = 'purged';
 delete from mount where instance_id in (select id from purged_instance_ids);
 delete from port where state = 'purged';

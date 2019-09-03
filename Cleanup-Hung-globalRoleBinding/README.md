@@ -15,6 +15,7 @@ NOTE: This script requires access to the Rancher local cluster. Please verify th
 **Running in dry-run mode**
 
 Please run this script in dry-run mode first and note which globalrolebinding are going to be updated.
+
 `./cleanup.sh`
 
 **Running cleanup**

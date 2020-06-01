@@ -1,0 +1,40 @@
+#!/bin/bash
+
+CATTLE_URL="http://rancher.example.com/v2-beta"
+CATTLE_ACCESS_KEY="AAAAAAAAAAAAAAAAAAA"
+CATTLE_SECRET_KEY="BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+SLEEP=5
+
+projects=`curl -s -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" -X GET -H 'Accept: application/json' -H 'Content-Type: application/json' "${CATTLE_URL}/projects/" | jq -r .data | jq '.[]' | jq '.id' | tr -d '"'`
+
+for project in $projects
+do
+  echo "############################################################"
+  echo "Working on project $project"
+  loadbalancers=`curl -s -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" -X GET -H 'Accept: application/json' -H 'Content-Type: application/json' "${CATTLE_URL}/projects/${project}/loadbalancerservices/" | jq -r .data | jq '.[]' | jq '.id' | tr -d '"'`
+  for loadbalancer in $loadbalancers
+  do
+    echo "Working on loadbalancer $loadbalancer"
+    CURRENT_CONFIG=`curl -s -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" -X GET -H 'Accept: application/json' -H 'Content-Type: application/json' "${CATTLE_URL}/projects/${project}/loadbalancerservices/${loadbalancer}" | jq -r .`
+    echo "Current config: $CURRENT_CONFIG"
+    if [[ ! `echo $CURRENT_CONFIG | grep 'lb-service-haproxy:v0.9.14'` ]]
+    then
+      echo "Need to change image..."
+      NEW_CONFIG=`echo $CURRENT_CONFIG | sed 's/lb-service-haproxy:v0.9.1/lb-service-haproxy:v0.9.14/g'`
+      echo "New config: $NEW_CONFIG"
+      echo "Updating config..."
+curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" \
+-X PUT \
+-H 'Accept: application/json' \
+-H 'Content-Type: application/json' \
+-d "$NEW_CONFIG" \
+"${CATTLE_URL}/projects/${project}/loadbalancerservices/${loadbalancer}"
+      echo ""
+      echo "Sleeping..."
+      sleep $SLEEP
+    else
+      echo "No need to upgrade..."
+    fi
+  done
+  echo "############################################################"
+done

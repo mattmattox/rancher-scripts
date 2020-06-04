@@ -5,8 +5,8 @@ CATTLE_ACCESS_KEY="AAAAAAAAAAAAAAAAAAA"
 CATTLE_SECRET_KEY="BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
 SLEEP=5
 
+echo "Updating haproxy image tag..."
 projects=`curl -s -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" -X GET -H 'Accept: application/json' -H 'Content-Type: application/json' "${CATTLE_URL}/projects/" | jq -r .data | jq '.[]' | jq '.id' | tr -d '"'`
-
 for project in $projects
 do
   echo "############################################################"
@@ -37,4 +37,23 @@ curl -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" \
     fi
   done
   echo "############################################################"
+done
+
+
+echo "Starting cleanup of old containers..."
+containers=`curl -s -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" -X GET -H 'Accept: application/json' -H 'Content-Type: application/json' "${CATTLE_URL}/containers?limit=2147483647" | jq -r .data | jq '.[]' | jq '.id' | tr -d '"'`
+for container in $containers
+do
+  echo "id: $container"
+  imageUuid=`curl -s -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" -X GET -H 'Accept: application/json' -H 'Content-Type: application/json' "${CATTLE_URL}/containers/${container}" | jq -r .data | jq -r .fields | jq -r .imageUuid`
+  if [[ `echo $imageUuid | grep 'lb-service-haproxy:v0.9.1'` ]]
+  then
+    echo "Need to delete"
+    echo "imageUuid: $imageUuid"
+    accountId=`curl -s -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" -X GET -H 'Accept: application/json' -H 'Content-Type: application/json' "${CATTLE_URL}/containers/${container}" | jq -r .accountId`
+    curl -s -u "${CATTLE_ACCESS_KEY}:${CATTLE_SECRET_KEY}" -X DELETE -H 'Accept: application/json' -H 'Content-Type: application/json' "${CATTLE_URL}/projects/${accountId}/containers/${container}"
+    echo ""
+    echo "Sleeping..."
+    sleep $SLEEP
+  fi
 done
